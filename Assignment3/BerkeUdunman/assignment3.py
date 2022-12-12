@@ -2,6 +2,7 @@
 # Berke Udunman
 # StudentNo: 270201046
 # Date: 12-2022
+# Version 2
 
 # References:
 # https://stackoverflow.com/questions/72539296/pyopengl-how-to-render-text
@@ -33,7 +34,6 @@ scene = Scene([])
 
 # Initializing cube
 cube_one = Cube()
-
 # Initializing pyramid
 pyramid_one = Pyramid()
 # Initializing simsObj
@@ -42,8 +42,12 @@ sims = SimsPyramid()
 sphere = Sphere()
 
 tori = Tori()
+
 # Pick one to draw
 arr = [cube_one, pyramid_one, sims, sphere, tori]
+
+for model in arr:
+    scene.appendModelToScene(model)
 
 # Camera
 camera = Camera([3, 3, 3])
@@ -81,55 +85,49 @@ def ReSizeGLScene(Width, Height):
 
 def DrawGLScene():
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)  # Clear The Screen And The Depth Buffer
-    display()  # Displaying Text
     glLoadIdentity()  # Reset The View
-
+    
+    # Displaying Text
+    display()
     # Update Camera
     camera.cameraUpdate()
     # Draw Scene
     scene.drawScene()
-
+    
     time.sleep(0.05)  # To give smoothness of movement
     glutSwapBuffers()
 
 
 i = 0
-scene.drawModel(arr[i])
-
-
-def text(x, y, color, text):
-    glColor3fv(color)
-    glWindowPos2f(x, y)
-    glutBitmapString(GLUT_BITMAP_TIMES_ROMAN_24, text.encode('ascii'))
-
+scene.drawModelByIndex(i)
 
 def display():
-    text(0, 180, (1, 1, 1),
-         "Press + to go for next object\n"
-         "Press - to go for previous object\n"
-         "Press 1 for cube \n"
-         "Press 2 for pyramid\n"
-         "Press 3 for diamond\n"
-         "Press 4 for sphere\n"
-         "Press 5 for tori\n"
-         "Press ESC for Exit")
+    Scene.text(0, 180, (1, 1, 1),
+            "Press + to go for next object\n"
+            "Press - to go for previous object\n"
+            "Press 1 for cube \n"
+            "Press 2 for pyramid\n"
+            "Press 3 for diamond\n"
+            "Press 4 for sphere\n"
+            "Press 5 for tori\n"
+            "Press ESC for Exit")
 
-    text(0, 450, (1, 1, 1),
-         "Camera Position: "
-         "X: "
-         f"{str(camera.x_cam)[0:3]}\t"
-         "Y: "
-         f"{str(camera.y_cam)[0:3]}\t"
-         "Z: """
-         f"{str(camera.z_cam)[0:3]}\t"
-         )
-    text(360, 100, (1, 1, 1),
-         "Camera Control: \n"
-         'W,A,S,D\n'
-         'Space and Quotation button\n'
-         'Press F to reset the camera'
-         )
-
+    Scene.text(0, 450, (1, 1, 1),
+            "Camera Position: "
+            "X: "
+            f"{str(camera.x_cam)[0:3]}\t"
+            "Y: "
+            f"{str(camera.y_cam)[0:3]}\t"
+            "Z: """
+            f"{str(camera.z_cam)[0:3]}\t"
+            )
+    Scene.text(360, 100, (1, 1, 1),
+            "Camera Control: \n"
+            'W,A,S,D\n'
+            'Space and Quotation button\n'
+            'Press F to reset the camera'
+            )
+    
 
 # The function called whenever a key is pressed. Note the use of Python tuples to pass in: (key, x, y)
 def keyPressed(key, x, y):
@@ -137,84 +135,7 @@ def keyPressed(key, x, y):
     global i
     # If escape is pressed, kill everything.
     # ord() is needed to get the keycode
-
-    if ord(key) == 27:
-        KeyboardControl.escape()
-    elif ord(key) == 43:
-        # + key,
-        scene.clearScene()
-        if i == len(arr) - 1:
-            i = 0
-        else:
-            i += 1
-        scene.drawModel(arr[i])
-        return
-    elif ord(key) == 45:
-        # - key,
-        scene.clearScene()
-        if abs(i) == len(arr) - 1:
-            i = 0
-        else:
-            i -= 1
-        scene.drawModel(arr[i])
-        return
-    elif ord(key) == 49:
-        # 1 key,
-        scene.clearScene()
-        i = 0
-        scene.drawModel(arr[i])
-        return
-    elif ord(key) == 50:
-        # 2 key,
-        scene.clearScene()
-        i = 1
-        scene.drawModel(arr[i])
-        return
-    elif ord(key) == 51:
-        # 3 key,
-        scene.clearScene()
-        i = 2
-        scene.drawModel(arr[i])
-        return
-    elif ord(key) == 52:
-        # 4 key,
-        scene.clearScene()
-        i = 3
-        scene.drawModel(arr[i])
-        return
-    elif ord(key) == 53:
-        # 5 key,tori
-        scene.clearScene()
-        i = 4
-        scene.drawModel(arr[i])
-        return
-
-    elif ord(key) == 97:
-        # 'a' key
-        camera.x_cam += 0.1
-    elif ord(key) == 100:
-        # 'd' key
-        camera.x_cam -= 0.1
-
-    elif ord(key) == 119:
-        # 'w' key
-        camera.z_cam += 0.1
-    elif ord(key) == 115:
-        # 's' key
-        camera.z_cam -= 0.1
-
-    elif ord(key) == 32:
-        # 'space' key
-        camera.y_cam += 0.1
-    elif ord(key) == 34:
-        # 'shift' key
-        camera.y_cam -= 0.1
-    elif ord(key) == 102:
-        # 'f' key
-        camera.x_cam = 3  # reset the camera
-        camera.y_cam = 3
-        camera.z_cam = 3
-
+    KeyboardControl.controlMainScene(key,arr,camera,scene,i)
 
 def main():
     global window

@@ -2,6 +2,7 @@
 # Berke Udunman
 # StudentNo: 270201046
 # Date: 12-2022
+# Version 2
 
 # References:
 # - http://www.songho.ca/opengl/gl_sphere.html

@@ -2,18 +2,21 @@
 # Berke Udunman
 # StudentNo: 270201046
 # Date: 12-2022
+# Version 2
 
-
+import time
 from tools.slicer import Slicer
 from mat3d import Mat3d
 from obj import Obj
 from OpenGL.GL import *
+from OpenGL.GLUT import *
 
 
 class Scene:
 
     def __init__(self, objArray):
         self.objArray = objArray
+        self.modelArray = []
 
     def appendObjectToScene(self, obj):
         self.objArray.append(obj)
@@ -21,13 +24,22 @@ class Scene:
     def removeObjectFromScene(self, obj):
         self.objArray.remove(obj)
 
-    def drawScene(self):
-        for obj in self.objArray:
-            Scene.drawShape(obj)
+    def appendModelToScene(self,model):
+        self.modelArray.append(model)
 
     def clearScene(self):
         self.objArray = []
 
+    def drawScene(self):
+        for obj in self.objArray:
+            Scene.drawShape(obj)
+ 
+    def drawModelByIndex(self,i):
+        if(i>len(self.modelArray)-1):
+            print("Index Out Of Range, please try again")
+        else:
+            self.drawModel(self.modelArray[i])
+            
     def drawModel(self, model3d):
         slicedPlanes = Slicer.sliceModel(model3d)
         for plane in slicedPlanes:
@@ -65,3 +77,10 @@ class Scene:
             obj.vertices[counter] = vertex
             counter += 1
         return obj
+    
+    @staticmethod
+    def text(x, y, color, text):
+        glColor3fv(color)
+        glWindowPos2f(x, y)
+        glutBitmapString(GLUT_BITMAP_TIMES_ROMAN_24, text.encode('ascii'))
+

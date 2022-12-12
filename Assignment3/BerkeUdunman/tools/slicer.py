@@ -2,6 +2,7 @@
 # Berke Udunman
 # StudentNo: 270201046
 # Date: 12-2022
+# Version 2
 from OpenGL.GL import *
 import random
 
@@ -22,7 +23,7 @@ class Slicer:
         planeArray = []
         print(model3d.facesLine)
         for i in range(len(model3d.facesLine)):
-            shape = GL_TRIANGLE_FAN
+            shape = GL_POLYGON
             plane = Obj(vertices=[],
                         matrixStack=[
 
